@@ -3,14 +3,28 @@
 Значок в трее Linux (X11): по горячей клавише курсор мыши прыгает в центр выбранного монитора,
 а окно под ним становится активным.
 
-## Запуск
+## Требования
 
-```
-/usr/bin/python3 app.py
+- **X11.** На Wayland не работают ни глобальная горячая клавиша, ни перенос курсора.
+- **Трей с поддержкой старых значков (XEmbed / Gtk.StatusIcon):** Cinnamon, XFCE, MATE
+  показывают его сами. В голом GNOME значка не будет без расширения вроде AppIndicator —
+  горячая клавиша при этом работает, нет только меню.
+- **Python 3.11+** (нужен `tomllib`). В Linux Mint 22 / Ubuntu 24.04 — 3.12.
+
+## Установка (Linux Mint / Ubuntu / Debian)
+
+```bash
+sudo apt install git python3-pystray python3-xlib python3-pil python3-gi gir1.2-gtk-3.0 libnotify-bin xdg-utils
+git clone https://github.com/WsdTD/mouse_pointer_focuser.git ~/development/mouse_pointer_focuser
+/usr/bin/python3 ~/development/mouse_pointer_focuser/app.py
 ```
 
-Зависимости: `pystray`, `python-xlib`, `Pillow`, PyGObject (GTK 3); `xdg-open` и `notify-send`.
-Запускается только один экземпляр.
+Сборка и виртуальное окружение не нужны: всё ставится из репозиториев дистрибутива.
+Затем в меню трея включите **«Запускать при входе»** — программа будет стартовать сама при
+каждом входе в систему (запись в `~/.config/autostart`). Запускается только один экземпляр:
+повторный запуск покажет уведомление и выйдет.
+
+Обновление: `git -C ~/development/mouse_pointer_focuser pull`, затем «Перезапустить» в меню.
 
 ## Меню (левый или правый клик)
 
