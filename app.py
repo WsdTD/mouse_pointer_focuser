@@ -245,9 +245,14 @@ class MonitorWatcher:
 		self._d.flush()
 		threading.Thread(target=self._loop, daemon=True).start()
 
+	# X delivers MappingNotify to every client unasked — each keyboard layout switch sends a pair.
+	# Only these mean the monitors changed.
+	_RANDR_EVENTS = (randr.ScreenChangeNotify, randr.CrtcChangeNotify, randr.OutputChangeNotify)
+
 	def _loop(self):
 		while True:
-			self._d.next_event()
+			if not isinstance(self._d.next_event(), self._RANDR_EVENTS):
+				continue
 			# One hotplug arrives as a burst of events: wait for it to settle, swallow the rest.
 			time.sleep(0.5)
 			while self._d.pending_events():
